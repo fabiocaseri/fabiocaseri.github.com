@@ -9,6 +9,7 @@ html, body {
 }
 a, a:link, a:visited {
 	color: #C93633;
+	-webkit-transition: color .25s;
 }
 a:hover, a:active {
 	color: #F08124;
