@@ -1,28 +1,92 @@
 <!doctype html>
-<html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>fabiocaseri.com</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" charset="utf-8"/>
-  <link type="text/plain" rel="author" href="http://www.fabiocaseri.com/humans.txt" />
+  <meta name="description" content="fabiocaseri.com - Fabio Caseri personal website">
+  <meta name="viewport" content="width=device-width">
+  <link type="text/plain" rel="author" href="://fabiocaseri.com/humans.txt" />
+
+  <link href="http://fonts.googleapis.com/css?family=Sniglet" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="css/normalize.min.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 </head>
 <body>
-  <div id="content">
-    Nothing here yet!<br/>
-    I <em>was</em> the developer of <a href="http://millionaire.fabiocaseri.com/">iPhone Millionaire</a>.<br/><br/><br/>
-    You can visit my <a href="http://tlog.fabiocaseri.com">tlog</a>.<br/><br/>
-    You can follow me on <a href="http://twitter.com/fabiocaseri">Twitter</a>,<br/>
-    or see my <a href="nest/">TweetNest</a>.<br/><br/>
-    Or look at my <a href="chrome/">Google Chrome Extensions</a>.
+  <!--[if lt IE 7]>
+    <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+  <![endif]-->
+<!--
+  <div class="header-container">
+    <header class="wrapper clearfix">
+      <h1 class="title">h1.title</h1>
+      <nav>
+        <ul>
+          <li><a href="#">nav ul li a</a></li>
+          <li><a href="#">nav ul li a</a></li>
+          <li><a href="#">nav ul li a</a></li>
+        </ul>
+      </nav>
+    </header>
   </div>
-  <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.5.2.min.js"%3E%3C/script%3E'))</script>
-  <script type="text/javascript" src="http://www.onlineleaf.com/savetheenvironment.js"></script>
-  <script type="text/javascript" src="http://www.observerapp.com/record.js"></script>
-  <script type="text/javascript">
-    try { Observerapp.record("4c8e99ecd30d89ad370097c0"); } catch(e) {};
+-->
+  <div class="main-container">
+    <div id="profile-card" class="main card clearfix">
+      <div id="profile-img">
+        <img class="rounded-img" src="http://www.gravatar.com/avatar/e584f1c79472acfebc416ee52a864b3c?s=150" alt="Avatar" />
+      </div>
+      <h2>Fabio Caseri</h2>
+
+      <div id="social-icons">
+        <a class="facebook-icon" href="https://facebook.com/fabio.caseri" target="_blank"><i class="fa fa-facebook-square fa-3x"></i></a>
+        <a class="twitter-icon" href="https://twitter.com/fabiocaseri" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>
+        <a class="instagram-icon" href="https://instagram.com/fabiocaseri" target="_blank"><i class="fa fa-instagram fa-3x"></i></a>
+        <a class="google-plus-icon" href="https://plus.google.com/+FabioCaseri" target="_blank"><i class="fa fa-google-plus-square fa-3x"></i></a>
+        <a class="github-icon" href="https://github.com/fabiocaseri" target="_blank"><i class="fa fa-github-square fa-3x"></i></a>
+      </div>
+
+      <div id="extras">
+        <ul class="actions">
+          <li><a href="javascript:void(0);"><i class="fa fa-map-marker"></i> Bergamo, Italy</a></li>
+          <li><a href="javascript:void(0);"><i class="fa fa-comments"></i> Contact</a></li>
+        </ul>
+        <div id="extra-content"></div>
+      </div>
+    </div><!-- #main -->
+  </div> <!-- #main-container -->
+
+  <div class="footer-container">
+    <footer>
+      <h3>2016 | Fabio Caseri</h3>
+    </footer>
+  </div>
+<!--
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+-->
+
+  <script src="js/main.js"></script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-45527339-1', 'fabiocaseri.com');
+    ga('send', 'pageview');
   </script>
-</body>
+
+  <!--
+  <script type="text/javascript" src="http://www.onlineleaf.com/savetheenvironment.js"></script>
+  -->
+
+  </body>
 </html>
