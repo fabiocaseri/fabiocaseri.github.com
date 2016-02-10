@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+<title>Pixel Design</title>
+<style type="text/css">
+html, body {
+	font-family: "MS Trebuchet", "Trebuchet MS", Arial, Tahoma, Helvetica, Verdana, sans-serif;
+}
+#dimensions-form input {
+	width: 50px;
+}
+#color-picker table {
+	border: 1px solid #333;
+	border-collapse: collapse;
+}
+#color-picker table td {
+	border: 1px solid #333;
+	height: 20px;
+	margin: 0;
+	padding: 0;
+	width: 20px;
+}
+#canvas {
+	padding: 10px 0;
+}
+#canvas table {
+	border: 1px solid #AAA;
+	border-collapse: collapse;
+}
+#canvas table td {
+	border: 1px solid #AAA;
+	height: 20px;
+	margin: 0;
+	padding: 0;
+	width: 20px;
+}
+</style>
+<script type="text/javascript">
+var selectedColor = 1;
+var CanvasConfig = {
+	ROWS: 32,
+	COLS: 32
+};
+var Colors = [
+	{color:'#020003', name:'Ristretto'},
+	{color:'#753497', name:'Arpeggio'},
+	{color:'#463F32', name:'Roma'},
+	{color:'#D8A038', name:'Livanto'},
+	{color:'#216425', name:'Capriccio'},
+	{color:'#D5AF64', name:'Volluto'},
+	{color:'#68473E', name:'Cosi'},
+	{color:'#F1D3AD', name:'Dulsao'},
+	{color:'#F7E3D3', name:'Rosabaya'},
+	{color:'#6F624D', name:'Indriya'},
+	{color:'#E9D057', name:'Finezzo Lungo'},
+	{color:'#4E64A8', name:'Vivalto Lungo'},
+	{color:'#16423C', name:'Fortissio Lungo'},
+	{color:'#D66543', name:'Decaffeinato Lungo'},
+	{color:'#D03F49', name:'Decaffeinato'},
+	{color:'#7E191C', name:'Decaffeinato Intenso'}
+];
+var colorMap = [];
+</script>
+</head>
+<body>
+<div id="dimensions-form">Rows <input type="text" id="rownum" value="32"/> Cols <input type="text" id="colnum" value="32"/><button id="redraw">Redraw</button><button id="total">Total</button></div>
+<div id="color-picker"></div>
+<div id="canvas"></div>
+<textarea id="color-map" rows="5" cols="80"></textarea><br/>
+<button id="import">Import</button>
+<script type="text/javascript" src="js/libs/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+var textAreaCM = document.getElementById('color-map');
+// COLOR PICKER TABLE
+var html = ['<table><tr>'];
+for (var i = 0, len = Colors.length; i < len; i++) {
+	html.push('<td id="cl-' + (i + 1) + '" style="background-color:' + Colors[i].color + '" title="' + Colors[i].name + '"></td>');
+}
+html.push('</tr></table>');
+document.getElementById('color-picker').innerHTML = html.join('');
+// CANVAS TABLE
+function drawCanvasTable(noReset) {
+	noReset = !!noReset;
+	var html = ['<table>'];
+	for (var j = 0; j < CanvasConfig.ROWS; j++) {
+		if (!noReset) {
+			colorMap[j] = [];
+		}
+		html.push('<tr id="r' + j + '">');
+		for (var k = 0; k < CanvasConfig.COLS; k++) {
+			if (!noReset) {
+				colorMap[j][k] = 0;
+			}
+			html.push('<td id="r' + j + '-c' + k + '"></td>');
+		}
+		html.push('</tr>');
+	}
+	html.push('</table>');
+	$('#canvas').empty().html(html.join(''));
+}
+//---
+function redrawCanvas(noReset) {
+	noReset = !!noReset;
+	var rows = parseInt(document.getElementById('rownum').value, 10), cols = parseInt(document.getElementById('colnum').value, 10);
+	if (isNaN(rows) || rows < 5 || rows > 50) {
+		alert('Invalid rows');
+		return;
+	}
+	if (isNaN(cols) || cols < 5 || cols > 50) {
+		alert('Invalid columns');
+		return;
+	}
+	if (!noReset && (rows != CanvasConfig.ROWS || cols != CanvasConfig.COLS)) {
+		textAreaCM.value = '';
+	}
+	CanvasConfig.ROWS = rows;
+	CanvasConfig.COLS = cols;
+	drawCanvasTable(noReset);
+}
+function importCanvas() {
+	colorMap = JSON.parse(textAreaCM.value);
+	document.getElementById('rownum').value = colorMap.length;
+	document.getElementById('colnum').value = colorMap[0].length;
+	redrawCanvas(1);	
+	var el;
+	for (var j = 0; j < CanvasConfig.ROWS; j++) {
+		for (var k = 0; k < CanvasConfig.COLS; k++) {
+			el = document.getElementById('r' + j + '-c' + k);
+			if (el) {
+				el.style.backgroundColor = (colorMap[j][k] > 0) ? Colors[colorMap[j][k] - 1].color : '';
+				el.title = (colorMap[j][k] > 0) ? Colors[colorMap[j][k] - 1].name : '';
+			}
+		}
+	}
+}
+function calculateTotal() {
+	for (var i = 0, len = Colors.length; i < len; i++) {
+		Colors[i].total = 0;
+	}
+	for (var j = 0; j < CanvasConfig.ROWS; j++) {
+		for (var k = 0; k < CanvasConfig.COLS; k++) {
+			if (colorMap[j][k] > 0) {
+				Colors[colorMap[j][k] - 1].total++;
+			}
+		}
+	}
+	var grandTotal = 0, result = [];
+	for (var i = 0, len = Colors.length; i < len; i++) {
+		grandTotal += Colors[i].total;
+		result.push(Colors[i].name + ': ' + Colors[i].total);
+	}
+	result.push('TOTAL: ' + grandTotal);
+	alert(result.join('\r\n'));
+}
+//---
+function handleCanvasClick(el, right) {
+	right = !!(right);
+	var rcSplit = el.id.split('-');
+	var r = rcSplit[0].substring(1), c = rcSplit[1].substring(1);
+	colorMap[r][c] = (right) ? 0 : selectedColor;
+	el.style.backgroundColor = (right) ? '' : Colors[selectedColor - 1].color;
+	el.title = (right) ? '' : Colors[selectedColor - 1].name;
+	textAreaCM.value = JSON.stringify(colorMap);
+}
+$(function() {
+	$('#color-picker table td').click(function() {
+		var col = parseInt(this.id.split('-')[1], 10);
+		selectedColor = col;
+	});
+	$('#canvas table td').live('click', function() {
+		handleCanvasClick(this);
+	}).live('contextmenu', function() {
+		handleCanvasClick(this, 1);
+		return false;
+	});
+	$('#redraw').click(redrawCanvas);
+	$('#total').click(calculateTotal);
+	$('#import').click(importCanvas);
+	drawCanvasTable();
+});
+</script>
+</body>
+</html>
