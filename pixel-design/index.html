@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+<head>
+<title>Pixel Design</title>
+<style type="text/css">
+html, body {
+  font-family: "MS Trebuchet", "Trebuchet MS", Arial, Tahoma, Helvetica, Verdana, sans-serif;
+}
+#dimensions-form input {
+  width: 50px;
+}
+#color-picker table {
+  border: 1px solid #333;
+  border-collapse: collapse;
+}
+#color-picker table td {
+  border: 1px solid #333;
+  cursor: default;
+  font-size: 14px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 20px;
+}
+#canvas {
+  padding: 10px 0;
+}
+#canvas table {
+  border: 1px solid #EEE;
+  border-collapse: collapse;
+}
+#canvas table td {
+  border: 1px solid #EEE;
+  cursor: default;
+  font-size: 14px;
+  height: 20px;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 20px;
+}
+#canvas.rounded table {
+  border: 0;
+  border-collapse: collapse;
+}
+#canvas.rounded table td {
+  border: 0;
+  font-size: 0px;
+}
+#canvas table td img {
+  margin: 0;
+  padding: 0;
+}
+#total_container {
+  display: none;
+}
+</style>
+<link rel="stylesheet" type="text/css" href="js/libs/facebox-v1.3-0/facebox.css" />
+<script type="text/javascript">
+var selectedColor = 1;
+var CanvasConfig = {
+  ROWS: 32,
+  COLS: 32
+};
+var Colors = [
+  {color:'#020003', textColor:'#F4F4F4', name:'Ristretto', price: 0.37},
+  {color:'#46256A', textColor:'#F4F4F4', name:'Arpeggio', price: 0.37},
+  {color:'#473626', textColor:'#F4F4F4', name:'Roma', price: 0.37},
+  {color:'#CA5400', textColor:'#111111', name:'Livanto', price: 0.37},
+  {color:'#16423C', textColor:'#F4F4F4', name:'Capriccio', price: 0.37},
+  {color:'#E29800', textColor:'#111111', name:'Volluto', price: 0.37},
+  {color:'#703807', textColor:'#F1F1F1', name:'Cosi', price: 0.37},
+  {color:'#EBE48A', textColor:'#111111', name:'Dulsao', price: 0.41},
+  {color:'#FAD0B8', textColor:'#111111', name:'Rosabaya', price: 0.41},
+  {color:'#796532', textColor:'#F4F4F4', name:'Indriya', price: 0.41},
+  {color:'#F2E700', textColor:'#111111', name:'Finezzo Lungo', price: 0.39},
+  {color:'#4E64A8', textColor:'#111111', name:'Vivalto Lungo', price: 0.39},
+  {color:'#216425', textColor:'#F4F4F4', name:'Fortissio Lungo', price: 0.39},
+  {color:'#F66620', textColor:'#111111', name:'Decaffeinato Lungo', price: 0.39},
+  {color:'#EC2200', textColor:'#111111', name:'Decaffeinato', price: 0.37},
+  {color:'#AC1600', textColor:'#F4F4F4', name:'Decaffeinato Intenso', price: 0.37}
+];
+var colorMap = [];
+var unitSize = 3.7/*3.75*/;
+</script>
+</head>
+<body>
+<div id="dimensions-form">Rows <input type="text" id="rownum" value="32"/> Cols <input type="text" id="colnum" value="32"/><button id="redraw">Redraw</button><input type="checkbox" id="rounded_checkbox" /><label for="rounded_checkbox">Rounded</label><input type="checkbox" id="numbers_checkbox" /><label for="numbers_checkbox">Numbers</label></div>
+<div id="color-picker"></div>
+<div id="canvas"></div>
+<select id="pic_select">
+  <option></option>
+  <option value="sj_portrait">Steve Jobs Portrait</option>
+  <option value="sj_portrait_gold_bg">Steve Jobs Portrait (Gold Background)</option>
+  <option value="mickey_lblue_bg">Mickey Mouse (Light Blue Background)</option>
+  <option value="mickey_purple_bg">Mickey Mouse (Purple Background)</option>
+</select>
+<button id="total">Total</button><br/>
+<textarea id="color-map" rows="5" cols="80"></textarea><br/>
+<button id="import">Import</button>
+<div id="total_container"><img src="circle_overlay.gif" /></div>
+<script type="text/javascript" src="js/libs/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/libs/facebox-v1.3-0/facebox.js"></script>
+<script type="text/javascript">
+// FaceBox CONFIG
+$.facebox.settings.loadingImage = 'js/libs/facebox-v1.3-0/loading.gif';
+$.facebox.settings.closeImage = 'js/libs/facebox-v1.3-0/closelabel.png';
+
+var textAreaCM = document.getElementById('color-map');
+// COLOR PICKER TABLE
+function drawColorPickerTable() {
+  var printNumbers = $('#numbers_checkbox').is(':checked');
+  var html = ['<table><tr>'];
+  var tdContent = '';
+  for (var i = 0, len = Colors.length; i < len; i++) {
+    tdContent = (printNumbers) ? (i + 1) : '';
+    html.push('<td id="cl-' + (i + 1) + '" style="background-color:' + Colors[i].color + ';color:' + Colors[i].textColor + '" title="' + Colors[i].name + '">' + tdContent + '</td>');
+  }
+  html.push('</tr></table>');
+  document.getElementById('color-picker').innerHTML = html.join('');
+}
+// CANVAS TABLE
+function drawCanvasTable(noReset) {
+  noReset = !!noReset;
+  var printNumbers = $('#numbers_checkbox').is(':checked');
+  var tdContent = '';
+  if ($('#rounded_checkbox').is(':checked')) {
+    tdContent = '<img src="circle_overlay.gif" />';
+  }
+  var html = ['<table>'];
+  for (var j = 0; j < CanvasConfig.ROWS; j++) {
+    if (!noReset) {
+      colorMap[j] = [];
+    }
+    html.push('<tr id="r' + j + '">');
+    for (var k = 0; k < CanvasConfig.COLS; k++) {
+      if (!noReset) {
+        colorMap[j][k] = 0;
+      } else if (printNumbers) {
+        tdContent = colorMap[j][k] > 0 ? colorMap[j][k] : '';
+      }
+      html.push('<td id="r' + j + '-c' + k + '">' + tdContent + '</td>');
+    }
+    html.push('</tr>');
+  }
+  html.push('</table>');
+  $('#canvas').empty().html(html.join(''));
+}
+//---
+function redrawCanvas(noReset) {
+  noReset = (noReset === 1);
+  var rows = parseInt(document.getElementById('rownum').value, 10), cols = parseInt(document.getElementById('colnum').value, 10);
+  if (isNaN(rows) || rows < 5 || rows > 50) {
+    alert('Invalid rows');
+    return;
+  }
+  if (isNaN(cols) || cols < 5 || cols > 50) {
+    alert('Invalid columns');
+    return;
+  }
+  if (!noReset && (rows != CanvasConfig.ROWS || cols != CanvasConfig.COLS)) {
+    textAreaCM.value = '';
+  }
+  CanvasConfig.ROWS = rows;
+  CanvasConfig.COLS = cols;
+  drawCanvasTable(noReset);
+}
+function importCanvas(internal) {
+  if (internal !== 1) {
+    $("#pic_select").val($("#pic_select option:first").val());
+    oldPic = null;
+  }
+  colorMap = JSON.parse(textAreaCM.value);
+  document.getElementById('rownum').value = colorMap.length;
+  document.getElementById('colnum').value = colorMap[0].length;
+  redrawCanvas(1);
+  var el;
+  for (var j = 0; j < CanvasConfig.ROWS; j++) {
+    for (var k = 0; k < CanvasConfig.COLS; k++) {
+      el = document.getElementById('r' + j + '-c' + k);
+      if (el) {
+        el.style.backgroundColor = (colorMap[j][k] > 0) ? Colors[colorMap[j][k] - 1].color : '';
+        el.style.color = (colorMap[j][k] > 0) ? Colors[colorMap[j][k] - 1].textColor : '';
+        el.title = (colorMap[j][k] > 0) ? Colors[colorMap[j][k] - 1].name : '';
+      }
+    }
+  }
+}
+function calculateTotal() {
+  for (var i = 0, len = Colors.length; i < len; i++) {
+    Colors[i].total = 0;
+  }
+  for (var j = 0; j < CanvasConfig.ROWS; j++) {
+    for (var k = 0; k < CanvasConfig.COLS; k++) {
+      if (colorMap[j][k] > 0) {
+        Colors[colorMap[j][k] - 1].total++;
+      }
+    }
+  }
+  var grandTotal = 0, grandTotalPrice = 0, result = [];
+  for (var i = 0, len = Colors.length; i < len; i++) {
+    grandTotal += Colors[i].total;
+    grandTotalPrice += (Colors[i].total * Colors[i].price).toFixed(2) * 1;
+    result.push(Colors[i].name + ': ' + Colors[i].total);
+  }
+  result.push('--------------------------------------');
+  result.push('TOTAL: ' + grandTotal);
+  result.push('SIZE: ' + (CanvasConfig.COLS * unitSize).toFixed(2) + 'cm x ' + (CanvasConfig.ROWS * unitSize).toFixed(2) + 'cm');
+  result.push('TOTAL PRICE: ' + grandTotalPrice.toFixed(2) + ' &euro;');
+  $('#total_container').empty().html(result.join('<br/>'));
+  jQuery.facebox({ div: '#total_container'});
+}
+//---
+function handleCanvasClick(el, right) {
+  right = !!(right);
+  var rcSplit = el.id.split('-');
+  var r = rcSplit[0].substring(1), c = rcSplit[1].substring(1);
+  colorMap[r][c] = (right) ? 0 : selectedColor;
+  el.style.backgroundColor = (right) ? '' : Colors[selectedColor - 1].color;
+  el.style.color = (right) ? '' : Colors[selectedColor - 1].textColor;
+  el.title = (right) ? '' : Colors[selectedColor - 1].name;
+  el.textContent = $('#numbers_checkbox').is(':checked') ? ((right) ? '' : selectedColor) : '';
+  textAreaCM.value = JSON.stringify(colorMap);
+}
+var oldPic = null;
+var picsCache = {};
+function handlePicChange() {
+  var pic = $(this).val();
+  if (pic && pic !== oldPic) {
+    if (picsCache[pic]) {
+      updatePicData(pic, picsCache[pic]);
+    } else {
+      $.get('arts/' + pic + '.txt', function(data) {
+        picsCache[pic] = data;
+        updatePicData(pic, data);
+      });
+    }
+  }
+}
+function updatePicData(pic, data) {
+  oldPic = pic;
+  textAreaCM.value = data;
+  importCanvas(1);
+}
+function handleRoundedChange() {
+  $('#canvas').toggleClass('rounded');
+  importCanvas(1);
+}
+function handleNumbersChange() {
+  drawColorPickerTable();
+  importCanvas(1);
+}
+function printContent(id) {
+  var str = $('#' + id).html();
+  var nw = window.open('','printwin','width=800');
+  nw.document.write('<html>\n<head>\n');
+  nw.document.write('<title>Print Window</title>\n');
+  nw.document.write('<script>\n');
+  nw.document.write('function chkstate(){\n');
+  nw.document.write('if(document.readyState=="complete"){\n');
+  nw.document.write('window.close()\n');
+  nw.document.write('}else{\n');
+  nw.document.write('setTimeout(chkstate,2000)\n');
+  nw.document.write('}\n');
+  nw.document.write('}\n');
+  nw.document.write('function print_win(){\n');
+  nw.document.write('window.print();\n');
+  nw.document.write('chkstate();\n');
+  nw.document.write('}\n');
+  nw.document.write('<\/script>\n');
+  nw.document.write('</head>\n');
+  nw.document.write('<body onload="print_win()">\n');
+  nw.document.write(str);
+  nw.document.write('</body>\n');
+  nw.document.write('</html>\n');
+  nw.document.close();
+}
+$(function() {
+  $('#color-picker table td').live('click', function() {
+    var col = parseInt(this.id.split('-')[1], 10);
+    selectedColor = col;
+  });
+  $('#canvas table td').live('click', function() {
+    handleCanvasClick(this);
+  }).live('contextmenu', function() {
+    handleCanvasClick(this, 1);
+    return false;
+  });
+  $('#redraw').click(redrawCanvas);
+  $('#total').click(calculateTotal);
+  $('#import').click(importCanvas);
+  $('#pic_select').on('change', handlePicChange);
+  $('#rounded_checkbox').on('change', handleRoundedChange);
+  $('#numbers_checkbox').on('change', handleNumbersChange);
+  drawColorPickerTable();
+  drawCanvasTable();
+});
+</script>
+</body>
+</html>
