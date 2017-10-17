@@ -1,0 +1,55 @@
+==================================================================
+https://keybase.io/fabiocaseri
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://fabiocaseri.com
+  * I am fabiocaseri (https://keybase.io/fabiocaseri) on keybase.
+  * I have a public key ASBwDwI9K9dLnVznWbcTydA5WLfIdL_EB_L7_gpBo3XvOwo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01202d25204905d4247f0301b3b7cf4dd9984ad4f8ea40a3f1eef6c655f0a127dfbe0a",
+      "host": "keybase.io",
+      "kid": "0120700f023d2bd74b9d5ce759b713c9d03958b7c874bfc407f2fbfe0a41a375ef3b0a",
+      "uid": "e36b0ca41b74a358a4354d190fa30a19",
+      "username": "fabiocaseri"
+    },
+    "merkle_root": {
+      "ctime": 1508258322,
+      "hash": "9434389c88b2ffbd1b931dd9fa63348e1c7e924629a1e220255be4c465e483ec4120bb34564b306c46bd39635cfdbdc21d5399647eda41370f39c878148729d8",
+      "hash_meta": "d849d531afb73d5a6f68de8c185d383f5b618b4fed78ce044a84a796d0de9150",
+      "seqno": 1591773
+    },
+    "service": {
+      "hostname": "fabiocaseri.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "1.0.33"
+  },
+  "ctime": 1508258339,
+  "expire_in": 504576000,
+  "prev": "fe63b58f201cf505416c52096f9a0357dc78886cb9893c1de774644d0fe72e19",
+  "seqno": 19,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgcA8CPSvXS51c51m3E8nQOVi3yHS/xAfy+/4KQaN17zsKp3BheWxvYWTFA0t7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwMmQyNTIwNDkwNWQ0MjQ3ZjAzMDFiM2I3Y2Y0ZGQ5OTg0YWQ0ZjhlYTQwYTNmMWVlZjZjNjU1ZjBhMTI3ZGZiZTBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwNzAwZjAyM2QyYmQ3NGI5ZDVjZTc1OWI3MTNjOWQwMzk1OGI3Yzg3NGJmYzQwN2YyZmJmZTBhNDFhMzc1ZWYzYjBhIiwidWlkIjoiZTM2YjBjYTQxYjc0YTM1OGE0MzU0ZDE5MGZhMzBhMTkiLCJ1c2VybmFtZSI6ImZhYmlvY2FzZXJpIn0sIm1lcmtsZV9yb290Ijp7ImN0aW1lIjoxNTA4MjU4MzIyLCJoYXNoIjoiOTQzNDM4OWM4OGIyZmZiZDFiOTMxZGQ5ZmE2MzM0OGUxYzdlOTI0NjI5YTFlMjIwMjU1YmU0YzQ2NWU0ODNlYzQxMjBiYjM0NTY0YjMwNmM0NmJkMzk2MzVjZmRiZGMyMWQ1Mzk5NjQ3ZWRhNDEzNzBmMzljODc4MTQ4NzI5ZDgiLCJoYXNoX21ldGEiOiJkODQ5ZDUzMWFmYjczZDVhNmY2OGRlOGMxODVkMzgzZjViNjE4YjRmZWQ3OGNlMDQ0YTg0YTc5NmQwZGU5MTUwIiwic2Vxbm8iOjE1OTE3NzN9LCJzZXJ2aWNlIjp7Imhvc3RuYW1lIjoiZmFiaW9jYXNlcmkuY29tIiwicHJvdG9jb2wiOiJodHRwczoifSwidHlwZSI6IndlYl9zZXJ2aWNlX2JpbmRpbmciLCJ2ZXJzaW9uIjoxfSwiY2xpZW50Ijp7Im5hbWUiOiJrZXliYXNlLmlvIGdvIGNsaWVudCIsInZlcnNpb24iOiIxLjAuMzMifSwiY3RpbWUiOjE1MDgyNTgzMzksImV4cGlyZV9pbiI6NTA0NTc2MDAwLCJwcmV2IjoiZmU2M2I1OGYyMDFjZjUwNTQxNmM1MjA5NmY5YTAzNTdkYzc4ODg2Y2I5ODkzYzFkZTc3NDY0NGQwZmU3MmUxOSIsInNlcW5vIjoxOSwidGFnIjoic2lnbmF0dXJlIn2jc2lnxEAL0rQx5T0PEcdIZyTsH00VNlbhlcWSbEgQc3j1FR0y7Elf4VaZ0Pg3oW629qdO8H1DW2JHW1xofFckQOYoKtAEqHNpZ190eXBlIKRoYXNogqR0eXBlCKV2YWx1ZcQgQ7x18tj7a6YOTlAAuGK1OwOXrES+XZK0wjXZ4qD+FaijdGFnzQICp3ZlcnNpb24B
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/fabiocaseri
+
+==================================================================
