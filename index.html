@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="css/normalize.min.css">
   <link rel="stylesheet" href="css/main.css">
 
+  <link rel="stylesheet" href="css/animate.min.css">
+
   <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 </head>
 <body>
@@ -37,14 +39,18 @@
     </header>
   </div>
 -->
-  <div class="main-container">
+  <div class="main-container animated pulse">
     <div id="profile-card" class="main card clearfix">
       <div id="profile-img">
-        <img class="rounded-img" src="//www.gravatar.com/avatar/e584f1c79472acfebc416ee52a864b3c?s=150" alt="Avatar" />
+        <div class="animated zoomIn">
+          <div class="animated rotateIn">
+            <img class="rounded-img" src="//www.gravatar.com/avatar/e584f1c79472acfebc416ee52a864b3c?s=150" alt="Avatar" />
+          </div>
+        </div>
       </div>
-      <h2>Fabio Caseri</h2>
+      <div class="animated rollIn"><h2>Fabio Caseri</h2></div>
 
-      <div id="social-icons">
+      <div id="social-icons" class="animated bounceInRight">
         <a class="facebook-icon" href="https://facebook.com/fabio.caseri" target="_blank"><i class="fa fa-facebook-square fa-3x"></i></a>
         <a class="twitter-icon" href="https://twitter.com/fabiocaseri" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>
         <a class="instagram-icon" href="https://instagram.com/fabiocaseri" target="_blank"><i class="fa fa-instagram fa-3x"></i></a>
@@ -53,8 +59,8 @@
       </div>
 
       <div id="extras">
-        <ul class="actions">
-          <li><a href="javascript:void(0);"><i class="fa fa-map-marker"></i> Bergamo, Italy</a></li>
+        <ul class="actions animated fadeInUp">
+          <li><a href="http://www.visitbergamo.net" target="_blank"><i class="fa fa-map-marker"></i> Bergamo, Italy</a></li>
           <li><a href="javascript:void(0);"><i class="fa fa-comments"></i> Contact</a></li>
         </ul>
         <div id="extra-content"></div>
@@ -64,9 +70,10 @@
 
   <div class="footer-container">
     <footer>
-      <h3>2016 | Fabio Caseri</h3>
+      <div class="animated fadeIn"><h3>2017 | Fabio Caseri</h3></div>
     </footer>
   </div>
+
 <!--
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
