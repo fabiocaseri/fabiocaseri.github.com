@@ -25,10 +25,18 @@ html, body {
 }
 #canvas {
   padding: 10px 0;
+  position: relative;
+}
+#canvas-img-bg {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  z-index: -1;
 }
 #canvas table {
   border: 1px solid #EEE;
   border-collapse: collapse;
+  z-index: 10;
 }
 #canvas table td {
   border: 1px solid #EEE;
@@ -82,6 +90,8 @@ var Colors = [
   {color:'#EC2200', textColor:'#111111', name:'Decaffeinato', price: 0.37},
   {color:'#AC1600', textColor:'#F4F4F4', name:'Decaffeinato Intenso', price: 0.37}
 ];
+var ColorsList = Colors.map(a => a.color);
+//var ColorsList = Colors.reduce((map,c,i) => (map[i] = c.color, map), {});
 var colorMap = [];
 var unitSize = 3.7/*3.75*/;
 </script>
@@ -102,11 +112,14 @@ var unitSize = 3.7/*3.75*/;
 <button id="import">Import</button>
 <div id="total_container"><img src="circle_overlay.gif" /></div>
 <script type="text/javascript" src="js/libs/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/libs/nearestColor-0.4.4.min.js"></script>
 <script type="text/javascript" src="js/libs/facebox-v1.3-0/facebox.js"></script>
 <script type="text/javascript">
 // FaceBox CONFIG
 $.facebox.settings.loadingImage = 'js/libs/facebox-v1.3-0/loading.gif';
 $.facebox.settings.closeImage = 'js/libs/facebox-v1.3-0/closelabel.png';
+// nearestColor CONFIG
+var getNearestColor = nearestColor.from(ColorsList);
 
 var textAreaCM = document.getElementById('color-map');
 // COLOR PICKER TABLE
@@ -129,7 +142,7 @@ function drawCanvasTable(noReset) {
   if ($('#rounded_checkbox').is(':checked')) {
     tdContent = '<img src="circle_overlay.gif" />';
   }
-  var html = ['<table>'];
+  var html = ['<table id ="canvas-table">'];
   for (var j = 0; j < CanvasConfig.ROWS; j++) {
     if (!noReset) {
       colorMap[j] = [];
@@ -146,7 +159,13 @@ function drawCanvasTable(noReset) {
     html.push('</tr>');
   }
   html.push('</table>');
+  html.push('<canvas id="canvas-img-bg"></canvas>');
   $('#canvas').empty().html(html.join(''));
+
+  var tbl = document.getElementById('canvas-table');
+  var canvasBG = document.getElementById('canvas-img-bg');
+  canvasBG.width = tbl.offsetWidth;
+  canvasBG.height = tbl.offsetHeight;
 }
 //---
 function redrawCanvas(noReset) {
@@ -277,6 +296,82 @@ function printContent(id) {
   nw.document.write('</html>\n');
   nw.document.close();
 }
+//--- DRAW FROM IMAGE UPLOAD
+function drawFromImage(image) {
+  var canvasBG = document.getElementById('canvas-img-bg');
+  var ctx = canvasBG.getContext('2d');
+  ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvasBG.width, canvasBG.height);
+
+  var rows = parseInt(document.getElementById('rownum').value, 10), cols = parseInt(document.getElementById('colnum').value, 10);
+
+  var rowStep = Math.floor(canvasBG.height / rows);
+  var colStep = Math.floor(canvasBG.width / cols);
+
+  for (var r = 0; r < rows; r++) {
+    for (var c = 0; c < cols; c++) {
+      var x = (colStep * c) + (colStep / 2);
+      var y = (rowStep * r) + (rowStep / 2);
+
+      var px = ctx.getImageData(x, y, 1, 1).data;
+      var nearestColor = getNearestColor({r: px[0], g: px[1], b: px[2]});
+
+      colorMap[r][c] = ColorsList.indexOf(nearestColor);
+
+      //ctx.fillStyle = 'rgba(255,0,0,1)';
+      //ctx.fillRect(x, y, 1, 1);
+    }
+  }
+
+  textAreaCM.value = JSON.stringify(colorMap);
+}
+//----------------------------------------------------------
+//--- DRAG AND DROP
+document.body.addEventListener('dragenter', onDragEnter, false);
+document.body.addEventListener('dragover', onDragOver, false);
+document.body.addEventListener('drop', onDrop, false);
+
+function onDragEnter(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  return false;
+}
+function onDragOver(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  return false;
+}
+function onDrop(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
+  var files = e.target.files || e.dataTransfer.files;
+  if (files.length > 1) {
+    return alert('Drag only one file');
+  }
+  handleFile(files[0]);
+  return false;
+}
+function handleFile(file) {
+  if (/\.(jpg|png|gif)$/.test(file.name)) {
+    readImageFile(file);
+  } else {
+    alert('Invalid file type');
+  }
+}
+function readImageFile(file) {
+  var reader = new FileReader();
+  reader.onload = function() {
+    var img = new Image();
+    img.onload = function() {
+      drawFromImage(img);
+      img = null;
+    }
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+//----------------------------------------------------------
+//--- MAIN
 $(function() {
   $('#color-picker table td').live('click', function() {
     var col = parseInt(this.id.split('-')[1], 10);
