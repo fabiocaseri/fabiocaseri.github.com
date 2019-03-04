@@ -97,7 +97,7 @@ var unitSize = 3.7/*3.75*/;
 </script>
 </head>
 <body>
-<div id="dimensions-form">Rows <input type="text" id="rownum" value="32"/> Cols <input type="text" id="colnum" value="32"/><button id="redraw">Redraw</button><input type="checkbox" id="rounded_checkbox" /><label for="rounded_checkbox">Rounded</label><input type="checkbox" id="numbers_checkbox" /><label for="numbers_checkbox">Numbers</label></div>
+<div id="dimensions-form">Rows <input type="text" id="rownum" value="32"/> Cols <input type="text" id="colnum" value="32"/><button id="redraw">Redraw</button><input type="checkbox" id="rounded_checkbox" /><label for="rounded_checkbox">Rounded</label><input type="checkbox" id="numbers_checkbox" /><label for="numbers_checkbox">Numbers</label><input type="checkbox" id="hide_overlay_checkbox" /><label for="hide_overlay_checkbox">Hide Overlay</label></div>
 <div id="color-picker"></div>
 <div id="canvas"></div>
 <select id="pic_select">
@@ -271,6 +271,10 @@ function handleNumbersChange() {
   drawColorPickerTable();
   importCanvas(1);
 }
+function handleOverlayChange() {
+  var o = $('#hide_overlay_checkbox').is(':checked') ? 0 : 1;
+  document.querySelectorAll('#canvas-table td').forEach(c => c.style.opacity = o);
+}
 function printContent(id) {
   var str = $('#' + id).html();
   var nw = window.open('','printwin','width=800');
@@ -389,6 +393,7 @@ $(function() {
   $('#pic_select').on('change', handlePicChange);
   $('#rounded_checkbox').on('change', handleRoundedChange);
   $('#numbers_checkbox').on('change', handleNumbersChange);
+  $('#hide_overlay_checkbox').on('change', handleOverlayChange);
   drawColorPickerTable();
   drawCanvasTable();
 });
