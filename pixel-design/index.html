@@ -6,8 +6,15 @@
 html, body {
   font-family: "MS Trebuchet", "Trebuchet MS", Arial, Tahoma, Helvetica, Verdana, sans-serif;
 }
-#dimensions-form input {
+#dimensions-form input[type="text"] {
   width: 50px;
+}
+#dimensions-form input[type="checkbox"] {
+  margin-left: 25px;
+  width: 15px;
+}
+#color-picker {
+  margin: 10px 0;
 }
 #color-picker table {
   border: 1px solid #333;
@@ -23,13 +30,32 @@ html, body {
   text-align: center;
   width: 20px;
 }
+#color-picker span {
+  display: block;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  position: relative;
+}
+#color-picker #color-selected {
+  border: 1px solid #333;
+  display: inline-block;
+  font-size: 14px;
+  height: 20px;
+  line-height: 20px;
+  margin: 4px 0 0 0;
+  padding: 0 6px;
+  position: absolute;
+  top: 0px;
+  width: 8px;
+}
 #canvas {
-  padding: 10px 0;
+  padding: 0;
   position: relative;
 }
 #canvas-img-bg {
   position: absolute;
-  top: 10px;
+  top: 0;
   left: 0;
   z-index: -1;
 }
@@ -97,7 +123,11 @@ var unitSize = 3.7/*3.75*/;
 </script>
 </head>
 <body>
-<div id="dimensions-form">Rows <input type="text" id="rownum" value="32"/> Cols <input type="text" id="colnum" value="32"/><button id="redraw">Redraw</button><input type="checkbox" id="rounded_checkbox" /><label for="rounded_checkbox">Rounded</label><input type="checkbox" id="numbers_checkbox" /><label for="numbers_checkbox">Numbers</label><input type="checkbox" id="hide_overlay_checkbox" /><label for="hide_overlay_checkbox">Hide Overlay</label></div>
+<div id="dimensions-form">
+  Rows <input type="text" id="rownum" value="32"/> Cols <input type="text" id="colnum" value="32"/><button id="redraw">Redraw</button>
+  <input type="checkbox" id="rounded_checkbox" /><label for="rounded_checkbox">Rounded</label><input type="checkbox" id="numbers_checkbox" /><label for="numbers_checkbox">Numbers</label><input type="checkbox" id="hide_overlay_checkbox" /><label for="hide_overlay_checkbox">Hide Overlay</label>
+  <br/><input type="file" id="file_input" />
+</div>
 <div id="color-picker"></div>
 <div id="canvas"></div>
 <select id="pic_select">
@@ -132,7 +162,15 @@ function drawColorPickerTable() {
     html.push('<td id="cl-' + (i + 1) + '" style="background-color:' + Colors[i].color + ';color:' + Colors[i].textColor + '" title="' + Colors[i].name + '">' + tdContent + '</td>');
   }
   html.push('</tr></table>');
+  html.push('<span>Selected&nbsp;<div id="color-selected" style="background-color:' + Colors[selectedColor - 1].color + ';color:' + Colors[selectedColor - 1].textColor + '">' + ((printNumbers) ? selectedColor : '') + '</div></span>');
   document.getElementById('color-picker').innerHTML = html.join('');
+}
+function drawColorPickerSelected() {
+  var csEl = document.getElementById('color-selected');
+  csEl.title = Colors[selectedColor - 1].name;
+  var csPadding = (selectedColor < 10) ? '0 6px' : '0 10px 0 2px';
+  csEl.style = 'background-color:' + Colors[selectedColor - 1].color + ';color:' + Colors[selectedColor - 1].textColor +';padding:' + csPadding;
+  if ($('#numbers_checkbox').is(':checked')) { csEl.innerText = selectedColor; }
 }
 // CANVAS TABLE
 function drawCanvasTable(noReset) {
@@ -191,7 +229,9 @@ function importCanvas(internal) {
     $("#pic_select").val($("#pic_select option:first").val());
     oldPic = null;
   }
-  colorMap = JSON.parse(textAreaCM.value);
+  if (textAreaCM.value) {
+    colorMap = JSON.parse(textAreaCM.value);
+  }
   document.getElementById('rownum').value = colorMap.length;
   document.getElementById('colnum').value = colorMap[0].length;
   redrawCanvas(1);
@@ -275,6 +315,9 @@ function handleOverlayChange() {
   var o = $('#hide_overlay_checkbox').is(':checked') ? 0 : 1;
   document.querySelectorAll('#canvas-table td').forEach(c => c.style.opacity = o);
 }
+function handleFileInputChange(e) {
+  return handleFilesEvent(e);
+}
 function printContent(id) {
   var str = $('#' + id).html();
   var nw = window.open('','printwin','width=800');
@@ -348,12 +391,17 @@ function onDrop(e) {
   e.stopPropagation();
   e.preventDefault();
 
+  if(e.target.type !== 'file') {
+    handleFilesEvent(e);
+  }
+  return false;
+}
+function handleFilesEvent(e) {
   var files = e.target.files || e.dataTransfer.files;
   if (files.length > 1) {
-    return alert('Drag only one file');
+    return alert('Only one file supported');
   }
   handleFile(files[0]);
-  return false;
 }
 function handleFile(file) {
   if (/\.(jpg|png|gif)$/.test(file.name)) {
@@ -380,6 +428,7 @@ $(function() {
   $('#color-picker table td').live('click', function() {
     var col = parseInt(this.id.split('-')[1], 10);
     selectedColor = col;
+    drawColorPickerSelected();
   });
   $('#canvas table td').live('click', function() {
     handleCanvasClick(this);
@@ -394,6 +443,7 @@ $(function() {
   $('#rounded_checkbox').on('change', handleRoundedChange);
   $('#numbers_checkbox').on('change', handleNumbersChange);
   $('#hide_overlay_checkbox').on('change', handleOverlayChange);
+  $('#file_input').on('change', handleFileInputChange);
   drawColorPickerTable();
   drawCanvasTable();
 });
