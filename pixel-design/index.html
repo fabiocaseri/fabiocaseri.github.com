@@ -49,6 +49,13 @@ html, body {
   top: 0px;
   width: 8px;
 }
+#color-picker #color-selected-name {
+  font-size: 0.95em;
+  font-style: italic;
+  left: 85px;
+  position: absolute;
+  top: 0;
+}
 #canvas {
   padding: 0;
   position: relative;
@@ -99,22 +106,34 @@ var CanvasConfig = {
   COLS: 32
 };
 var Colors = [
-  {color:'#020003', textColor:'#F4F4F4', name:'Ristretto', price: 0.37},
-  {color:'#46256A', textColor:'#F4F4F4', name:'Arpeggio', price: 0.37},
-  {color:'#473626', textColor:'#F4F4F4', name:'Roma', price: 0.37},
-  {color:'#CA5400', textColor:'#111111', name:'Livanto', price: 0.37},
-  {color:'#16423C', textColor:'#F4F4F4', name:'Capriccio', price: 0.37},
-  {color:'#E29800', textColor:'#111111', name:'Volluto', price: 0.37},
-  {color:'#703807', textColor:'#F1F1F1', name:'Cosi', price: 0.37},
+  {color:'#020003', textColor:'#F4F4F4', name:'Ristretto', price: 0.39},
+  {color:'#46256A', textColor:'#F4F4F4', name:'Arpeggio', price: 0.39},
+  {color:'#473626', textColor:'#F4F4F4', name:'Roma', price: 0.39},
+  {color:'#CA5400', textColor:'#111111', name:'Livanto', price: 0.39},
+  {color:'#16423C', textColor:'#F4F4F4', name:'Capriccio', price: 0.39},
+  {color:'#E29800', textColor:'#111111', name:'Volluto', price: 0.39},
+  {color:'#703807', textColor:'#F1F1F1', name:'Cosi', price: 0.39},
   {color:'#EBE48A', textColor:'#111111', name:'Dulsao', price: 0.41},
   {color:'#FAD0B8', textColor:'#111111', name:'Rosabaya', price: 0.41},
   {color:'#796532', textColor:'#F4F4F4', name:'Indriya', price: 0.41},
-  {color:'#F2E700', textColor:'#111111', name:'Finezzo Lungo', price: 0.39},
-  {color:'#4E64A8', textColor:'#111111', name:'Vivalto Lungo', price: 0.39},
-  {color:'#216425', textColor:'#F4F4F4', name:'Fortissio Lungo', price: 0.39},
-  {color:'#F66620', textColor:'#111111', name:'Decaffeinato Lungo', price: 0.39},
-  {color:'#EC2200', textColor:'#111111', name:'Decaffeinato', price: 0.37},
-  {color:'#AC1600', textColor:'#F4F4F4', name:'Decaffeinato Intenso', price: 0.37}
+  {color:'#F2E700', textColor:'#111111', name:'Finezzo Lungo (fuori produzione)', price: 0.39, deceased: true},
+  {color:'#4E64A8', textColor:'#111111', name:'Vivalto Lungo', price: 0.41},
+  {color:'#216425', textColor:'#F4F4F4', name:'Fortissio Lungo', price: 0.41},
+  {color:'#F66620', textColor:'#111111', name:'Decaffeinato Lungo (fuori produzione)', price: 0.41, deceased: true},
+  {color:'#EC2200', textColor:'#111111', name:'Decaffeinato (fuori produzione)', price: 0.37, deceased: true},
+  {color:'#AC1600', textColor:'#F4F4F4', name:'Decaffeinato Intenso (fuori produzione)', price: 0.37, deceased: true},
+  {color:'#020626', textColor:'#F4F4F4', name:'Kazaar', price: 0.43},
+  {color:'#1D373C', textColor:'#F4F4F4', name:'Dharkan', price: 0.43},
+  {color:'#1A7067', textColor:'#F4F4F4', name:'Envivo Lungo', price: 0.43},
+  {color:'#CE7322', textColor:'#111111', name:'Linizio Lungo', price: 0.41},
+  {color:'#E6DB9F', textColor:'#111111', name:'Vanilio', price: 0.47},
+  {color:'#2F1A0F', textColor:'#F4F4F4', name:'Ciocattino', price: 0.47},
+  {color:'#9E6629', textColor:'#F4F4F4', name:'Caramelito', price: 0.47},
+  {color:'#687A52', textColor:'#F4F4F4', name:'India', price: 0.43},
+  {color:'#006072', textColor:'#F4F4F4', name:'Indonesia', price: 0.43},
+  {color:'#D88183', textColor:'#F4F4F4', name:'Colombia', price: 0.43},
+  {color:'#C5A35F', textColor:'#111111', name:'Nicaragua', price: 0.43},
+  {color:'#DE8E69', textColor:'#F4F4F4', name:'Ethiopia', price: 0.43}
 ];
 var ColorsList = Colors.map(a => a.color);
 //var ColorsList = Colors.reduce((map,c,i) => (map[i] = c.color, map), {});
@@ -157,20 +176,23 @@ function drawColorPickerTable() {
   var printNumbers = $('#numbers_checkbox').is(':checked');
   var html = ['<table><tr>'];
   var tdContent = '';
+  var bgStripes = ';background-image: repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(0,0,0,.5) 3px, rgba(0,0,0,.5) 6px);'
   for (var i = 0, len = Colors.length; i < len; i++) {
     tdContent = (printNumbers) ? (i + 1) : '';
-    html.push('<td id="cl-' + (i + 1) + '" style="background-color:' + Colors[i].color + ';color:' + Colors[i].textColor + '" title="' + Colors[i].name + '">' + tdContent + '</td>');
+    html.push('<td id="cl-' + (i + 1) + '" style="background-color:' + Colors[i].color + ';color:' + Colors[i].textColor + (!!Colors[i].deceased ? bgStripes: '') + '" title="' + Colors[i].name + '">' + tdContent + '</td>');
   }
   html.push('</tr></table>');
-  html.push('<span>Selected&nbsp;<div id="color-selected" style="background-color:' + Colors[selectedColor - 1].color + ';color:' + Colors[selectedColor - 1].textColor + '">' + ((printNumbers) ? selectedColor : '') + '</div></span>');
+  var csPadding = (selectedColor < 10) ? '0 6px' : '0 10px 0 2px';
+  html.push('<span>Selected&nbsp;<div id="color-selected" style="background-color:' + Colors[selectedColor - 1].color + ';color:' + Colors[selectedColor - 1].textColor + ';padding:' + csPadding + '">' + ((printNumbers) ? selectedColor : '') + '</div><div id="color-selected-name">' + Colors[selectedColor - 1].name + ' [&euro; ' + Colors[selectedColor - 1].price + ']</div></span>');
   document.getElementById('color-picker').innerHTML = html.join('');
 }
 function drawColorPickerSelected() {
   var csEl = document.getElementById('color-selected');
   csEl.title = Colors[selectedColor - 1].name;
   var csPadding = (selectedColor < 10) ? '0 6px' : '0 10px 0 2px';
-  csEl.style = 'background-color:' + Colors[selectedColor - 1].color + ';color:' + Colors[selectedColor - 1].textColor +';padding:' + csPadding;
+  csEl.style = 'background-color:' + Colors[selectedColor - 1].color + ';color:' + Colors[selectedColor - 1].textColor + ';padding:' + csPadding;
   if ($('#numbers_checkbox').is(':checked')) { csEl.innerText = selectedColor; }
+  document.getElementById('color-selected-name').innerHTML = Colors[selectedColor - 1].name + ' [&euro; ' + Colors[selectedColor - 1].price + ']';
 }
 // CANVAS TABLE
 function drawCanvasTable(noReset) {
