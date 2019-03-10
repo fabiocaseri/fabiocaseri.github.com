@@ -326,10 +326,12 @@ function updatePicData(pic, data) {
   importCanvas(1);
 }
 function handleRoundedChange() {
+  $('#numbers_checkbox').prop('disabled', this.checked);
   $('#canvas').toggleClass('rounded');
   importCanvas(1);
 }
 function handleNumbersChange() {
+  $('#rounded_checkbox').prop('disabled', this.checked);
   drawColorPickerTable();
   importCanvas(1);
 }
