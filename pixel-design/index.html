@@ -160,7 +160,7 @@ var unitSize = 3.7/*3.75*/;
 <textarea id="color-map" rows="5" cols="80"></textarea><br/>
 <button id="import">Import</button>
 <div id="total_container"><img src="circle_overlay.gif" /></div>
-<script type="text/javascript" src="js/libs/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/libs/jquery-1.12.4.min.js"></script>
 <script type="text/javascript" src="js/libs/nearestColor-0.4.4.min.js"></script>
 <script type="text/javascript" src="js/libs/facebox-v1.3-0/facebox.js"></script>
 <script type="text/javascript">
@@ -447,14 +447,14 @@ function readImageFile(file) {
 //----------------------------------------------------------
 //--- MAIN
 $(function() {
-  $('#color-picker table td').live('click', function() {
+  $('#color-picker').on('click', 'table td', function() {
     var col = parseInt(this.id.split('-')[1], 10);
     selectedColor = col;
     drawColorPickerSelected();
   });
-  $('#canvas table td').live('click', function() {
+  $('#canvas').on('click', 'table td', function() {
     handleCanvasClick(this);
-  }).live('contextmenu', function() {
+  }).on('contextmenu', 'table td', function() {
     handleCanvasClick(this, 1);
     return false;
   });
